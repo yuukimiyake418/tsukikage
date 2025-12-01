@@ -1,0 +1,251 @@
+/* --- 変数定義 --- */
+:root {
+    --color-bg: #f5f3ef; /* 生成り色：和紙のような温かみ */
+    --color-text: #333333; /* 墨色 */
+    --color-accent: #8e7f77; /* 鈍い金/茶：落ち着き */
+    --font-mincho: 'Shippori Mincho', serif;
+    --font-gothic: 'Zen Kaku Gothic New', sans-serif;
+    --easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- リセット & 基本設定 --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-gothic);
+    font-weight: 300;
+    line-height: 2;
+    overflow-x: hidden;
+    letter-spacing: 0.1em;
+}
+
+a { text-decoration: none; color: inherit; transition: opacity 0.5s; }
+a:hover { opacity: 0.6; }
+
+img { width: 100%; height: auto; display: block; object-fit: cover; }
+
+/* --- 煙のエフェクト (Canvas) --- */
+#smoke-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* クリックを邪魔しない */
+    z-index: 10;
+    opacity: 0.6;
+    filter: blur(15px); /* 煙の柔らかさを表現 */
+}
+
+/* --- ヘッダー --- */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 100;
+    mix-blend-mode: multiply;
+}
+
+.logo {
+    font-family: var(--font-mincho);
+    font-size: 1.4rem;
+    writing-mode: vertical-rl; /* 縦書きで和の雰囲気 */
+    letter-spacing: 0.3em;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+}
+
+/* --- メインビジュアル (HERO) --- */
+.hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    background: linear-gradient(to bottom, #e0ddd9, #f5f3ef);
+    opacity: 0.5;
+    z-index: -1;
+    border-radius: 50% 50% 0 0;
+    filter: blur(50px);
+    animation: breathe 10s infinite alternate;
+}
+
+@keyframes breathe {
+    0% { transform: scale(0.95); opacity: 0.5; }
+    100% { transform: scale(1.05); opacity: 0.7; }
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 5;
+}
+
+.hero-title {
+    font-family: var(--font-mincho);
+    font-size: 3rem;
+    margin-bottom: 20px;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+}
+
+.hero-subtitle {
+    font-size: 0.9rem;
+    opacity: 0;
+    animation: fadeIn 2s 1s forwards var(--easing);
+}
+
+/* --- 共通セクション設定 --- */
+section {
+    padding: 120px 10%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-family: var(--font-mincho);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 80px;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: var(--color-text);
+    margin: 20px auto 0;
+    opacity: 0.3;
+}
+
+/* --- コンセプト --- */
+.concept-text {
+    font-family: var(--font-mincho);
+    font-size: 1.1rem;
+    line-height: 2.5;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* --- 商品一覧 (PRODUCTS) --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 60px;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s var(--easing);
+}
+
+.product-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.product-image-wrapper {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background-color: #e8e6e3; /* 画像プレースホルダー色 */
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 本番ではimgタグを使用しますが、今回はCSSでプレースホルダーを装飾 */
+.placeholder-art {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: var(--font-mincho);
+    font-size: 2rem;
+    background: #dcd9d5;
+    transition: transform 1.5s var(--easing);
+}
+
+.product-card:hover .placeholder-art {
+    transform: scale(1.05);
+}
+
+.product-name {
+    font-family: var(--font-mincho);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.product-desc {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+}
+
+/* --- アニメーション用クラス --- */
+.fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.2s var(--easing), transform 1.2s var(--easing);
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 文字を一文字ずつ出すアニメーション用 */
+.char-reveal span {
+    opacity: 0;
+    display: inline-block;
+    animation: reveal 1s forwards var(--easing);
+}
+
+@keyframes reveal {
+    from { opacity: 0; transform: translateY(10px); filter: blur(5px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; filter: blur(10px); }
+    to { opacity: 1; filter: blur(0); }
+}
+
+/* --- フッター --- */
+footer {
+    padding: 80px 0;
+    text-align: center;
+    font-size: 0.75rem;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    margin-top: 100px;
+}
+
